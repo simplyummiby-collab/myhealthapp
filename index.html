@@ -94,7 +94,7 @@
 </div>
 
 <script>
-  let waterCount = 0;
+  let waterCount = Number(localStorage.getItem("waterCount")) || 0;
   const goal = 8;
 
   const glassesDiv = document.getElementById("glasses");
@@ -109,6 +109,7 @@
     });
 
     waterText.textContent = waterCount + " of " + goal + " glasses today";
+    localStorage.setItem("waterCount", waterCount);
   }
 
   glassesDiv.addEventListener("click", function(event) {
