@@ -1,0 +1,149 @@
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f9f3f2;
+    text-align: center;
+    padding: 25px;
+    color: #333;
+  }
+
+  .app {
+    max-width: 520px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 22px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  }
+
+  #glasses {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .glass {
+    width: 48px;
+    height: 72px;
+    border: 3px solid #7fb8d8;
+    border-radius: 8px 8px 18px 18px;
+    background: white;
+    cursor: pointer;
+  }
+
+  .glass.full {
+    background: linear-gradient(to top, #8bd3ff 75%, white 75%);
+  }
+
+  button {
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+  }
+
+  #resetWater {
+    background: #eee;
+  }
+
+  #pauseSnack {
+    background: #f3c7d5;
+    margin-top: 15px;
+  }
+
+  #affirmationText {
+    background: #fff7fa;
+    padding: 18px;
+    border-radius: 16px;
+    min-height: 50px;
+    margin-top: 15px;
+  }
+</style>
+
+<div class="app">
+  <h1>Sip & Pause</h1>
+  <p>A gentle daily reset for water, cravings, and better choices.</p>
+
+  <h2>Water Today</h2>
+
+  <div id="glasses">
+    <button class="glass"></button>
+    <button class="glass"></button>
+    <button class="glass"></button>
+    <button class="glass"></button>
+    <button class="glass"></button>
+    <button class="glass"></button>
+    <button class="glass"></button>
+    <button class="glass"></button>
+  </div>
+
+  <p id="waterText">0 of 8 glasses today</p>
+
+  <button id="resetWater">Reset Water</button>
+
+  <h2>Snack Pause</h2>
+
+  <button id="pauseSnack">I want to snack — help me pause</button>
+
+  <p id="affirmationText">
+    Click the button when you need a gentle reset.
+  </p>
+</div>
+
+<script>
+  let waterCount = 0;
+  const goal = 8;
+
+  const glassesDiv = document.getElementById("glasses");
+  const waterText = document.getElementById("waterText");
+  const resetBtn = document.getElementById("resetWater");
+
+  function updateGlasses() {
+    const buttons = glassesDiv.querySelectorAll(".glass");
+
+    buttons.forEach(function(button, index) {
+      button.classList.toggle("full", index < waterCount);
+    });
+
+    waterText.textContent = waterCount + " of " + goal + " glasses today";
+  }
+
+  glassesDiv.addEventListener("click", function(event) {
+    if (event.target.classList.contains("glass")) {
+      const buttons = Array.from(glassesDiv.querySelectorAll(".glass"));
+      const clickedIndex = buttons.indexOf(event.target);
+
+      waterCount = clickedIndex + 1;
+      updateGlasses();
+    }
+  });
+
+  resetBtn.addEventListener("click", function() {
+    waterCount = 0;
+    updateGlasses();
+  });
+
+  const affirmations = [
+    "Pause first. I can choose what helps my body.",
+    "This craving is a wave. I do not have to obey it.",
+    "I am practicing care, not punishment.",
+    "One better choice still counts.",
+    "I can wait ten minutes and check in again.",
+    "My body deserves steady, gentle choices.",
+    "I do not have to snack just because the thought showed up.",
+    "Water first. Then I can decide with a clearer mind."
+  ];
+
+  const pauseSnackBtn = document.getElementById("pauseSnack");
+  const affirmationText = document.getElementById("affirmationText");
+
+  pauseSnackBtn.addEventListener("click", function() {
+    const randomIndex = Math.floor(Math.random() * affirmations.length);
+    affirmationText.textContent = affirmations[randomIndex];
+  });
+
+  updateGlasses();
+</script>
