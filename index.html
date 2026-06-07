@@ -332,27 +332,27 @@
     const totalHours = endHour - startHour;
     const glassesPerHour = waterGoal / totalHours;
 
-    for (let i = 1; i <= totalHours; i++) {
-      const targetTime = startHour + i;
-      let cumulativeGlasses = Math.ceil(glassesPerHour * i);
+ for (let glassNumber = 1; glassNumber <= waterGoal; glassNumber++) {
 
-      if (cumulativeGlasses > waterGoal) {
-        cumulativeGlasses = waterGoal;
-      }
+  const targetHour =
+    startHour +
+    Math.ceil((totalHours / waterGoal) * glassNumber);
 
-      const isChecked = savedWaterChecks[i - 1] === true ? "checked" : "";
+  const isChecked =
+    savedWaterChecks[glassNumber - 1] === true
+      ? "checked"
+      : "";
 
-      const row = document.createElement("tr");
+  const row = document.createElement("tr");
 
-      row.innerHTML = `
-        <td>${formatHour(targetTime)}</td>
-        <td>${cumulativeGlasses} glass${cumulativeGlasses === 1 ? "" : "es"}</td>
-        <td><input type="checkbox" class="check water-check" ${isChecked}></td>
-      `;
+  row.innerHTML = `
+    <td>${formatHour(targetHour)}</td>
+    <td>${glassNumber} glass${glassNumber === 1 ? "" : "es"}</td>
+    <td><input type="checkbox" class="check water-check" ${isChecked}></td>
+  `;
 
-      waterTableBody.appendChild(row);
-    }
-
+  waterTableBody.appendChild(row);
+}
     waterMessage.textContent = "Follow the checkpoints to finish your water goal.";
 
     updateWaterGlasses();
