@@ -424,9 +424,9 @@ document.getElementById("signInBtn").addEventListener("click", async function() 
     return;
   }
 
-  currentUser = data.user;
-  authMessage.textContent = "Signed in.";
-});
+currentUser = data.user;
+authMessage.textContent = "Signed in.";
+await loadCloudData();});
 
 document.getElementById("signOutBtn").addEventListener("click", async function() {
   await supabaseClient.auth.signOut();
@@ -737,6 +737,15 @@ async function saveCloudData() {
     console.log("Cloud save error:", error.message);
   }
 }
+  if (error) {
+    console.log("Cloud save error:", error.message);
+  }
+}
+
+async function loadCloudData() {
+  // paste load code here
+}
+  
   function checkStepParty() {
     const checks = document.querySelectorAll(".step-check");
     const checked = document.querySelectorAll(".step-check:checked");
