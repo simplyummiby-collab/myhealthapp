@@ -791,11 +791,19 @@ stepTableBody.addEventListener("change", function(event) {
   }
 });
   /* START APP */
+async function checkSavedSession() {
+  const { data } = await supabaseClient.auth.getSession();
 
+  if (data.session) {
+    currentUser = data.session.user;
+    authMessage.textContent = "Signed in.";
+    await loadCloudData();
+  }
+}
   makeWaterPlan();
-  makeStepPlan();
-  updateSummary();
-
+makeStepPlan();
+updateSummary();
+checkSavedSession();
   document
   .getElementById("testSupabase")
   .addEventListener("click", async function () {
