@@ -248,7 +248,11 @@
 </head>
 
 <body>
+<button id="testSupabase">
+  Test Supabase Connection
+</button>
 
+<p id="testResult"></p>
 <div class="app-shell">
   <div class="dashboard">
 
@@ -370,8 +374,16 @@
     </main>
   </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL = "https://eqnqzfghzzlnhnvejbiv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_qY64imdONDWDJykNFY-CCw_JaWoFpp5";
+
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+  
   const todayKey = new Date().toISOString().slice(0, 10);
 
   function dailyKey(name) {
@@ -688,6 +700,26 @@
   makeWaterPlan();
   makeStepPlan();
   updateSummary();
+
+  document
+  .getElementById("testSupabase")
+  .addEventListener("click", async function () {
+
+    const { data, error } =
+      await supabaseClient
+        .from("daily_health")
+        .select("*")
+        .limit(1);
+
+    if (error) {
+      document.getElementById("testResult").textContent =
+        "Error: " + error.message;
+      return;
+    }
+
+    document.getElementById("testResult").textContent =
+      "✅ Connected to Supabase";
+  });
 </script>
 
 </body>
