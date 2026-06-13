@@ -6,6 +6,16 @@
 
 <title>Today Health Dashboard</title>
 
+<!--
+Version 1.1
+Dashboard redesign:
+- Polished sidebar
+- Welcome/date header
+- Progress cards
+- Dashboard preview cards
+- Better login/sync area
+-->
+
 <style>
 :root {
   --bg: #f7f4fb;
@@ -24,9 +34,7 @@
   --shadow: 0 14px 35px rgba(54, 35, 93, 0.08);
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -40,8 +48,6 @@ body {
   grid-template-columns: 260px 1fr;
   min-height: 100vh;
 }
-
-/* SIDEBAR */
 
 .sidebar {
   background: rgba(255,255,255,0.85);
@@ -130,8 +136,6 @@ body {
   line-height: 1.5;
 }
 
-/* MAIN */
-
 .main {
   padding: 30px;
 }
@@ -163,13 +167,8 @@ body {
   white-space: nowrap;
 }
 
-.panel {
-  display: none;
-}
-
-.panel.active {
-  display: block;
-}
+.panel { display: none; }
+.panel.active { display: block; }
 
 .summary-grid {
   display: grid;
@@ -259,9 +258,7 @@ body {
   margin-bottom: 18px;
 }
 
-.card-header h2 {
-  margin: 0;
-}
+.card-header h2 { margin: 0; }
 
 .goal-label {
   color: var(--muted);
@@ -559,7 +556,7 @@ th {
           </div>
 
           <div class="check-row" id="dashboardStepDots"></div>
-          <p class="message" id="dashboardStepText">Check your Fitbit targets by time.</p>
+          <p class="message" id="dashboardStepText">Check your step targets by time.</p>
           <button class="primary-btn shortcut-btn" data-panel="stepsPanel">Go to Step Tracker →</button>
         </div>
       </div>
@@ -646,7 +643,7 @@ th {
           <thead>
             <tr>
               <th>By Time</th>
-              <th>Fitbit Should Show</th>
+              <th>Watch Should Show</th>
               <th>Done?</th>
             </tr>
           </thead>
