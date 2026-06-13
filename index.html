@@ -7,13 +7,14 @@
 <title>Today Health Dashboard</title>
 
 <!--
-Version 1.1
-Dashboard redesign:
-- Polished sidebar
-- Welcome/date header
-- Progress cards
-- Dashboard preview cards
-- Better login/sync area
+Version 1.2
+Water tracker redesign:
+- Dashboard redesign from v1.1
+- Polished water tracker layout
+- Water progress circle
+- Next glass callout
+- Water timeline
+- Plan settings moved lower
 -->
 
 <style>
@@ -48,6 +49,8 @@ body {
   grid-template-columns: 260px 1fr;
   min-height: 100vh;
 }
+
+/* SIDEBAR */
 
 .sidebar {
   background: rgba(255,255,255,0.85);
@@ -135,6 +138,8 @@ body {
   font-size: 14px;
   line-height: 1.5;
 }
+
+/* MAIN */
 
 .main {
   padding: 30px;
@@ -403,6 +408,89 @@ th {
   line-height: 1.5;
 }
 
+/* WATER V1.2 */
+
+.water-feature-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.water-hero-card {
+  background: linear-gradient(135deg, #ffffff, #eef7ff);
+}
+
+.water-circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  margin: 24px auto;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(var(--blue) 0deg, #ece8f5 0deg);
+}
+
+.water-circle > div {
+  width: 142px;
+  height: 142px;
+  border-radius: 50%;
+  background: white;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.water-circle strong {
+  font-size: 34px;
+}
+
+.water-circle span {
+  color: var(--muted);
+}
+
+.next-callout {
+  background: linear-gradient(135deg, #eaf4ff, #f7f2ff);
+  border-radius: 22px;
+  padding: 24px;
+  margin: 18px 0;
+  text-align: center;
+}
+
+#nextWaterTime {
+  color: var(--muted);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+#nextWaterTarget {
+  font-size: 26px;
+}
+
+.settings-card {
+  margin-top: 18px;
+}
+
+.water-mini-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.mini-stat {
+  background: #faf7ff;
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.mini-stat strong {
+  display: block;
+  font-size: 22px;
+  margin-top: 4px;
+}
+
 @media (max-width: 900px) {
   .app {
     grid-template-columns: 1fr;
@@ -425,7 +513,8 @@ th {
 
   .summary-grid,
   .two-col,
-  .motivation-card {
+  .motivation-card,
+  .water-feature-grid {
     grid-template-columns: 1fr;
   }
 
@@ -576,9 +665,77 @@ th {
     </section>
 
     <section id="waterPanel" class="panel">
+      <div class="water-feature-grid">
+
+        <div class="tool-card water-hero-card">
+          <div class="card-header">
+            <h2>💧 Water Tracker</h2>
+            <span class="goal-label">Today’s hydration</span>
+          </div>
+
+          <div class="water-circle" id="waterCircle">
+            <div>
+              <strong id="waterCircleText">0/8</strong>
+              <span>glasses</span>
+            </div>
+          </div>
+
+          <p id="waterMessage" class="message"></p>
+
+          <div class="water-mini-stats">
+            <div class="mini-stat">
+              Completed
+              <strong id="waterDoneMini">0</strong>
+            </div>
+            <div class="mini-stat">
+              Remaining
+              <strong id="waterRemainingMini">8</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <div class="card-header">
+            <h2>Next Glass</h2>
+            <span class="goal-label">Stay on pace</span>
+          </div>
+
+          <div class="next-callout">
+            <div id="nextWaterTime">By --</div>
+            <strong id="nextWaterTarget">Next checkpoint</strong>
+          </div>
+
+          <div id="waterGlasses"></div>
+
+          <p class="message">
+            Follow the timeline below. Each checkmark updates your dashboard and syncs across devices.
+          </p>
+        </div>
+
+      </div>
+
       <div class="tool-card">
         <div class="card-header">
-          <h2>💧 Water Goal</h2>
+          <h2>Water Timeline</h2>
+          <span class="goal-label">Check off each target</span>
+        </div>
+
+        <table id="waterTable">
+          <thead>
+            <tr>
+              <th>By Time</th>
+              <th>Water Target</th>
+              <th>Done?</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="tool-card settings-card">
+        <div class="card-header">
+          <h2>⚙️ Plan Settings</h2>
+          <span class="goal-label">Adjust today’s plan</span>
         </div>
 
         <label>Water goal:
@@ -597,20 +754,6 @@ th {
 
         <button id="makeWaterPlan" class="primary-btn">Make Water Plan</button>
         <button id="resetWater" class="reset-btn">Reset Water</button>
-
-        <div id="waterGlasses"></div>
-        <p id="waterMessage" class="message"></p>
-
-        <table id="waterTable">
-          <thead>
-            <tr>
-              <th>By Time</th>
-              <th>Water Target</th>
-              <th>Done?</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
       </div>
     </section>
 
@@ -830,6 +973,7 @@ function updateSummary() {
 
   renderDashboardWater();
   renderDashboardSteps();
+  updateWaterFeatureUI();
 }
 
 /* WATER */
@@ -881,6 +1025,7 @@ function updateWaterGlasses() {
       : "Follow the checkpoints to finish your water goal.";
 
   updateSummary();
+  updateWaterFeatureUI();
 }
 
 function renderDashboardWater() {
@@ -895,6 +1040,52 @@ function renderDashboardWater() {
     glass.className = "glass";
     if (i < checked) glass.classList.add("full");
     box.appendChild(glass);
+  }
+}
+
+function updateWaterFeatureUI() {
+  const waterGoal = Number(waterGoalInput.value);
+  const checked = document.querySelectorAll(".water-check:checked").length;
+  const remaining = Math.max(waterGoal - checked, 0);
+  const percent = waterGoal ? Math.round((checked / waterGoal) * 100) : 0;
+  const degrees = Math.round((percent / 100) * 360);
+
+  const waterCircle = document.getElementById("waterCircle");
+  const waterCircleText = document.getElementById("waterCircleText");
+  const nextWaterTime = document.getElementById("nextWaterTime");
+  const nextWaterTarget = document.getElementById("nextWaterTarget");
+  const waterDoneMini = document.getElementById("waterDoneMini");
+  const waterRemainingMini = document.getElementById("waterRemainingMini");
+
+  if (waterCircle) {
+    waterCircle.style.background =
+      "conic-gradient(var(--blue) " + degrees + "deg, #ece8f5 " + degrees + "deg)";
+  }
+
+  if (waterCircleText) {
+    waterCircleText.textContent = checked + "/" + waterGoal;
+  }
+
+  if (waterDoneMini) {
+    waterDoneMini.textContent = checked;
+  }
+
+  if (waterRemainingMini) {
+    waterRemainingMini.textContent = remaining;
+  }
+
+  const rows = Array.from(document.querySelectorAll("#waterTable tbody tr"));
+  const nextRow = rows.find(function(row) {
+    const checkbox = row.querySelector(".water-check");
+    return checkbox && !checkbox.checked;
+  });
+
+  if (nextRow && nextWaterTime && nextWaterTarget) {
+    nextWaterTime.textContent = "By " + nextRow.children[0].textContent;
+    nextWaterTarget.textContent = nextRow.children[1].textContent;
+  } else if (nextWaterTime && nextWaterTarget) {
+    nextWaterTime.textContent = "Done for today";
+    nextWaterTarget.textContent = "🎉 Water goal complete";
   }
 }
 
